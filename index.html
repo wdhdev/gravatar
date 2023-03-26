@@ -34,7 +34,7 @@
         const btn = document.getElementById("btn");
         const img = document.getElementById("gravatar");
 
-        const run = () => {
+        const findGravatar = () => {
             if(!email.value) return;
 
             btn.setAttribute("disabled", true);
@@ -61,6 +61,6 @@
             })
         }
 
-        btn.onclick = run;
+        btn.onclick = findGravatar;
     </script>
 </html>
