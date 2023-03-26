@@ -17,15 +17,50 @@
             <h1 class="text-3xl font-bold mb-2">Find Gravatar</h1>
             <p class="mb-4">Find someone's Gravatar using their email address.</p>
 
-            <form id="find-gravatar" action="https://api.wdh.gg/gravatar" method="POST">
-                <input type="email" name="email" class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 mb-6" placeholder="Email Address" required>
+            <input type="email" id="email" class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 mb-6" placeholder="Email Address">
 
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Find Gravatar</button>
-            </form>
+            <button type="submit" id="btn" class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Find Gravatar</button>
+
+            <img id="gravatar" src="" class="mt-8 mx-auto hidden">
         </main>
 
         <footer class="mt-8">
             <p>&copy; 2023 <span class="font-semibold">William Harrison</span> - All Rights Reserved.</p>
         </footer>
     </body>
+
+    <script>
+        const email = document.getElementById("email");
+        const btn = document.getElementById("btn");
+        const img = document.getElementById("gravatar");
+
+        const run = () => {
+            if(!email.value) return;
+
+            btn.setAttribute("disabled", true);
+            btn.innerHTML = "Finding Gravatar...";
+
+            fetch("https://api.wdh.gg/gravatar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email.value
+                })
+            }).then(res => res.json()).then(data => {
+                email.value = "";
+
+                btn.removeAttribute("disabled");
+                btn.innerHTML = "Find Gravatar";
+
+                if(data.message) return alert(data.message);
+
+                img.src = `${data.url}?size=200`;
+                img.classList.remove("hidden");
+            })
+        }
+
+        btn.onclick = run;
+    </script>
 </html>
