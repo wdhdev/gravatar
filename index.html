@@ -42,25 +42,18 @@
             btn.setAttribute("disabled", true);
             btn.innerHTML = "Finding Gravatar...";
 
-            fetch("https://api.wdh.gg/gravatar", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email.value
+            fetch(`https://api.wdh.gg/gravatar?email=${email.value.toLowerCase()}`)
+                .then(res => res.json()).then(data => {
+                    form.reset();
+
+                    btn.removeAttribute("disabled");
+                    btn.innerHTML = "Find Gravatar";
+
+                    if(data.message) return alert(data.message);
+
+                    img.src = `${data.url}?size=200`;
+                    img.classList.remove("hidden");
                 })
-            }).then(res => res.json()).then(data => {
-                form.reset();
-
-                btn.removeAttribute("disabled");
-                btn.innerHTML = "Find Gravatar";
-
-                if(data.message) return alert(data.message);
-
-                img.src = `${data.url}?size=200`;
-                img.classList.remove("hidden");
-            })
         }
     </script>
 </html>
