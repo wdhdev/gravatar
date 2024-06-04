@@ -15,7 +15,7 @@
         <meta itemprop="image" content="https://www.gravatar.com/avatar?size=512">
 
         <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="https://gravatar.wdh.gg">
+        <meta property="og:url" content="https://wdhdev.github.io/gravatar">
         <meta property="og:type" content="website">
         <meta property="og:title" content="Find Gravatar">
         <meta property="og:description" content="Find someone's Gravatar using their email address.">
@@ -29,6 +29,7 @@
 
         <!-- Scripts -->
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jshashes/1.0.8/hashes.min.js"></script>
     </head>
 
     <body class="p-8 max-w-md m-auto bg-zinc-900 text-white text-center">
@@ -61,18 +62,23 @@
             btn.setAttribute("disabled", true);
             btn.innerHTML = "Finding Gravatar...";
 
-            fetch(`https://api.wdh.gg/gravatar?email=${email.value.toLowerCase()}`)
-                .then(res => res.json()).then(res => {
-                    form.reset();
+            const gravatar = getGravatar(email.value)
 
-                    btn.removeAttribute("disabled");
-                    btn.innerHTML = "Find Gravatar";
+            form.reset();
 
-                    if(res.message) return alert(res.message);
+            btn.removeAttribute("disabled");
+            btn.innerHTML = "Find Gravatar";
 
-                    img.src = `${res.data.url}?size=200`;
-                    img.classList.remove("hidden");
-                })
+            img.src = `${gravatar}?size=200`;
+            img.classList.remove("hidden");
+        }
+
+        function getGravatar(email) {
+            // Validate email
+            if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(email)) return alert("Email is not valid");
+
+            // Return URL or hash
+            return `https://gravatar.com/avatar/${(new Hashes.MD5).hex(email.toLowerCase().trim())}`;
         }
     </script>
 </html>
